@@ -6,6 +6,7 @@ import config
 from dataset import HorseZebraDataset
 from generator import Generator
 from torchvision.utils import save_image
+from tqdm import tqdm
 
 val_dataset = HorseZebraDataset(root_zebra=config.VAL_DIR+"\\zebra",root_horse=config.VAL_DIR+"\\horse",transform=config.transforms)
 val_loader = DataLoader(val_dataset,batch_size=1,shuffle=False)
@@ -20,7 +21,8 @@ load_checkpoint(config.CHECKPOINT_GEN_H,gen_H,opt_gen,config.LEARNING_RATE)
 # load_checkpoint(config.CHECKPOINT_GEN_Z,gen_Z,opt_gen,config.LEARNING_RATE)
 
 def save_some_examples(gen_H, val_loader, folder):
-    for idx, (zebra,horse) in enumerate(val_loader):
+    loop = tqdm(val_loader,leave=True)
+    for idx, (zebra,horse) in enumerate(loop):
         zebra = zebra.to(config.DEVICE)
         # horse = horse.to(config.DEVICE)
         gen_H.eval()
